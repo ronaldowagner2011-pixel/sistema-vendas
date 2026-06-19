@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+model Estoque {
+  id          String   @id @default(cuid())
+  sku         String?
+  produto     String
+  size        String?
+  custo       Float
+  localizacao String   @default("Casa")
+  status      String   @default("EM ESTOQUE")
+  dataEntrada DateTime?
+  obs         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Venda {
+  id         String   @id @default(cuid())
+  canal      String
+  produto    String
+  size       String?
+  custo      Float
+  preco      Float
+  lucro      Float
+  margem     Float
+  mesAno     String?
+  numPedido  String?
+  estoqueId  String?
+  createdAt  DateTime @default(now())
+}
+
+model USCLOSER {
+  id          String   @id @default(cuid())
+  produto     String
+  size        String?
+  valor       Float
+  frete       Float    @default(0)
+  imposto     Float    @default(0)
+  custoTotal  Float
+  dataCompra  DateTime?
+  status      String   @default("COMPRADO")
+  dataChegada DateTime?
+  tracking    String?
+  obs         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CESAR {
+  id          String   @id @default(cuid())
+  produto     String
+  size        String?
+  valor       Float
+  frete       Float    @default(0)
+  imposto     Float    @default(0)
+  custoTotal  Float
+  dataCompra  DateTime?
+  status      String   @default("COMPRADO")
+  dataChegada DateTime?
+  tracking    String?
+  obs         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ComprasBR {
+  id          String   @id @default(cuid())
+  loja        String?
+  produto     String
+  size        String?
+  valor       Float
+  formaPgto   String?
+  dataCompra  DateTime?
+  status      String   @default("AGUARDANDO")
+  dataChegada DateTime?
+  obs         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Devolucao {
+  id         String   @id @default(cuid())
+  produto    String
+  size       String?
+  canal      String?
+  numPedido  String?
+  motivo     String?
+  status     String   @default("PENDENTE")
+  data       DateTime?
+  estoqueId  String?
+  vendaId    String?
+  createdAt  DateTime @default(now())
+}
