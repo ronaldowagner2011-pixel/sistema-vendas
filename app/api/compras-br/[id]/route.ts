@@ -2,12 +2,13 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAuth, ok } from '@/lib/api-helper'
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireAuth()
   if (auth.error) return auth.error
+  const { id } = await params
   const body = await req.json()
   const item = await prisma.comprasBR.update({
-    where: { id: params.id },
+    where: { id },
     data: {
       loja: body.loja, produto: body.produto, size: body.size,
       valor: parseFloat(body.valor) || 0,
@@ -20,9 +21,10 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   return ok(item)
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireAuth()
   if (auth.error) return auth.error
-  await prisma.comprasBR.delete({ where: { id: params.id } })
+  const { id } = await params
+  await prisma.comprasBR.delete({ where: { id } })
   return ok({ ok: true })
 }
